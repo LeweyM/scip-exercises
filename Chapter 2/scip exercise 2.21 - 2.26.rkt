@@ -76,3 +76,26 @@
 ;                                       ^  (3 4)
 ;                                      / \
 ;                                     3   4
+
+;2.25
+
+(check-equal?
+ (car (cdaddr (list 1 3 (list 5 7) 9)))
+ 7)
+(check-equal?
+ (caar (list (list 7)))
+ 7)
+(check-equal?
+ (cadadr (cadadr (cadadr (list 1 (list 2 (list 3 (list 4 (list 5 (list 6 7)))))))))
+ 7)
+
+;2.26
+
+(define x (list 1 2 3))
+
+(define y (list 4 5 6))
+
+(check-equal? (append x y) (list 1 2 3 4 5 6))
+(check-equal? (cons x y) '((1 2 3) 4 5 6) )
+(check-equal? (list x y) '((1 2 3) (4 5 6)) )
+
