@@ -62,7 +62,7 @@
       (set! front-ptr new-pair))
     (define (set-rear-ptr q new-pair)
       (set! rear-ptr new-pair))
-    (define (insert-queue! item) 
+    (define (insert item) 
       (let ((new-pair (cons item '()))) 
         (cond ((empty-queue?) 
                (set-front-ptr! new-pair) 
@@ -75,7 +75,7 @@
     (define (dispatch m)
       (cond 
         ((eq? m 'print) print-queue)
-        ((eq? m 'insert) (lambda (v)  (insert-queue! v)))
+        ((eq? m 'insert) (lambda (v)  (insert v)))
         )
       )
     dispatch))
@@ -87,3 +87,5 @@
 (insert-queue! q3 'a)
 (insert-queue! q3 'b)
 (print-queue q3)
+
+
