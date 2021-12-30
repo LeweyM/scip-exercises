@@ -177,20 +177,20 @@
 (define (averager a b avg)
   (define (process-new-value)
     (cond  ((and (has-value? a) (has-value? b))
-           (set-value! avg
-                       (/ (+ (get-value a) (get-value b)) 
-                          2)
-                       me))
-          ((and (has-value? avg) (has-value? a))
-           (set-value! b
-                       (- (* 2 (get-value avg))
-                          a)
-                       me))
-          ((and (has-value? avg) (has-value? b))
-           (set-value! a
-                       (- (* 2 (get-value avg))
-                          b)
-                       me))))
+            (set-value! avg
+                        (/ (+ (get-value a) (get-value b)) 
+                           2)
+                        me))
+           ((and (has-value? avg) (has-value? a))
+            (set-value! b
+                        (- (* 2 (get-value avg))
+                           a)
+                        me))
+           ((and (has-value? avg) (has-value? b))
+            (set-value! a
+                        (- (* 2 (get-value avg))
+                           b)
+                        me))))
   (define (process-forget-value)
     (forget-value! avg me)
     (forget-value! a me)
@@ -291,3 +291,42 @@
 (set-value! test-output 9 'user) ; probe => 3
 (set-value! test-input 5 'user) ; probe => CONFLICT
 
+; 3.36
+
+; E: a, b
+
+; environment from make-connector
+; E1: ->E
+; value: #f->10, informant: #f->a, constraints: '()
+
+; 3.37
+
+(define (c+ x y)
+  (let ((z (make-connector)))
+    (adder x y z)
+    z))
+
+(define (c* x y)
+  (let ((z (make-connector)))
+    (multiplier x y z) 
+    z))
+
+(define (cv val)
+  (let ((z (make-connector)))
+    (constant val z) 
+    z))
+
+(define (c/ x y) 
+  (let ((z (make-connector))) 
+    (multiplier z y x) 
+    z)) 
+
+(define (celsius-fahrenheit-converter x)
+  (c+ (c* (c/ (cv 9)  (cv 5))
+          x)
+      (cv 32)))
+
+(define C (make-connector))
+(define F (celsius-fahrenheit-converter C))
+(probe "F" F)
+(set-value! C 10 'user) ; F:50
